@@ -2,12 +2,13 @@
 
   <div align="center">
 
-    **Design. Develop. Market.**
+  **Design. Develop. Market.**
 
-    [![Website](https://img.shields.io/badge/Website-modernlabyrinth.com-blue?style=flat-square)](https://www.modernlabyrinth.com)
-    [![Email](https://img.shields.io/badge/Contact-info@modernlabyrinth.com-red?style=flat-square)](mailto:info@modernlabyrinth.com)
-    [![Location](https://img.shields.io/badge/Location-Orange_County,_CA-green?style=flat-square)](https://maps.google.com/?q=Orange+County+Californ
-  ia)
+  [![Website](https://img.shields.io/badge/Website-modernlabyrinth.com-blue?style=flat-square)](https://www.modernlabyrinth.com)
+  [![Email](https://img.shields.io/badge/Contact-info@modernlabyrinth.com-red?style=flat-square)](mailto:info@modernlabyrinth.com)
+  [![Location](https://img.shields.io/badge/Location-Orange_County,_CA-green?style=flat-square)](https://maps.google.com/?q=Orange+County+California
+  )
+
   </div>
 
   ---
@@ -103,5 +104,7 @@
   ---
 
   <div align="center">
-    <sub>© 2025 Modern Labyrinth. All rights reserved.</sub>
+
+  © 2024 Modern Labyrinth. All rights reserved.
+
   </div>
