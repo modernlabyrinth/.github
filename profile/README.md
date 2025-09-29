@@ -1,8 +1,4 @@
-  # Modern Labyrinth
-
   <div align="center">
-
-  **Design. Develop. Market.**
 
   [![Website](https://img.shields.io/badge/Website-modernlabyrinth.com-blue?style=flat-square)](https://www.modernlabyrinth.com)
   [![Email](https://img.shields.io/badge/Contact-info@modernlabyrinth.com-red?style=flat-square)](mailto:info@modernlabyrinth.com)
