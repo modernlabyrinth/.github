@@ -1,0 +1,101 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 3 * * *'  # Run nightly at 3 AM
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+        shard: [1, 2, 3, 4]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          cd tests
+          npm ci
+      
+      - name: Install Playwright Browsers
+        run: |
+          cd tests
+          npx playwright install --with-deps ${{ matrix.browser }}
+      
+      - name: Run E2E tests
+        run: |
+          cd tests
+          npx playwright test --project=${{ matrix.browser }} --shard=${{ matrix.shard }}/4
+        env:
+          BASE_URL: http://localhost:3000
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-results-${{ matrix.browser }}-${{ matrix.shard }}
+          path: |
+            tests/e2e/test-results/
+            tests/e2e/playwright-report/
+          retention-days: 30
+      
+      - name: Upload videos
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-videos-${{ matrix.browser }}-${{ matrix.shard }}
+          path: tests/e2e/test-results/**/video.webm
+          retention-days: 7
+      
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-screenshots-${{ matrix.browser }}-${{ matrix.shard }}
+          path: tests/e2e/test-results/**/screenshot.png
+          retention-days: 7
+
+  merge-reports:
+    if: always()
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: all-reports
+      
+      - name: Merge reports
+        run: |
+          cd tests
+          npx playwright merge-reports --reporter html ../all-reports
+      
+      - name: Upload merged report
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-merged-report
+          path: tests/playwright-report/
+          retention-days: 30

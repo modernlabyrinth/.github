@@ -1,0 +1,43 @@
+# Testing Framework
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-xdist==3.5.0
+pytest-timeout==2.2.0
+
+# API Testing
+requests==2.31.0
+httpx==0.25.2
+responses==0.24.1
+
+# Database Testing
+pytest-postgresql==5.0.0
+pytest-mongodb==3.1.0
+sqlalchemy==2.0.23
+alembic==1.13.0
+
+# Performance Testing
+locust==2.20.0
+
+# Security Testing
+bandit==1.7.5
+safety==2.3.5
+
+# Factories and Fixtures
+factory-boy==3.3.0
+faker==20.1.0
+
+# Mocking
+freezegun==1.4.0
+responses==0.24.1
+
+# Code Quality
+black==23.12.1
+flake8==6.1.0
+pylint==3.0.3
+mypy==1.7.1
+
+# Documentation
+pytest-html==4.1.1
+allure-pytest==2.13.2

@@ -1,0 +1,107 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 2 * * *'  # Run nightly at 2 AM
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: twobirds_test
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+      
+      - name: Run unit tests
+        run: |
+          cd tests/backend
+          pytest tests/unit -v --cov=app --cov-report=xml --cov-report=html
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/twobirds_test
+          REDIS_URL: redis://localhost:6379/0
+      
+      - name: Run integration tests
+        run: |
+          cd tests/backend
+          pytest tests/integration -v --cov=app --cov-append --cov-report=xml
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/twobirds_test
+          REDIS_URL: redis://localhost:6379/0
+      
+      - name: Run security checks
+        run: |
+          cd tests/backend
+          bandit -r app/ -f json -o bandit-report.json || true
+          safety check --json > safety-report.json || true
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./tests/backend/coverage.xml
+          flags: backend
+          name: backend-coverage
+      
+      - name: Generate test report
+        if: always()
+        run: |
+          cd tests/backend
+          pytest tests/ --html=report.html --self-contained-html
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-test-results-${{ matrix.python-version }}
+          path: |
+            tests/backend/htmlcov/
+            tests/backend/report.html
+            tests/backend/bandit-report.json
+            tests/backend/safety-report.json
+      
+      - name: Check coverage threshold
+        run: |
+          cd tests/backend
+          pytest --cov=app --cov-fail-under=80

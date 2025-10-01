@@ -1,0 +1,112 @@
+name: Mobile Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-ios:
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          cd tests
+          npm ci
+      
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+      
+      - name: Build iOS app for testing
+        run: |
+          cd tests
+          npm run build:ios:test
+      
+      - name: Run iOS tests
+        run: |
+          cd tests
+          npm run test:mobile:ios
+      
+      - name: Upload iOS test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-test-results
+          path: |
+            tests/mobile/artifacts/ios/
+      
+      - name: Upload iOS screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-screenshots
+          path: tests/mobile/artifacts/ios/screenshots/
+
+  test-android:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      
+      - name: Install dependencies
+        run: |
+          cd tests
+          npm ci
+      
+      - name: Build Android app for testing
+        run: |
+          cd tests
+          npm run build:android:test
+      
+      - name: Run Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          target: google_apis
+          arch: x86_64
+          profile: pixel_5
+          script: |
+            cd tests
+            npm run test:mobile:android
+      
+      - name: Upload Android test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-test-results
+          path: |
+            tests/mobile/artifacts/android/
+      
+      - name: Upload Android screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-screenshots
+          path: tests/mobile/artifacts/android/screenshots/

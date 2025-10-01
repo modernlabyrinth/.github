@@ -1,0 +1,100 @@
+name: Performance Tests
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 4 * * 0'  # Run weekly on Sunday at 4 AM
+  workflow_dispatch:
+    inputs:
+      users:
+        description: 'Number of concurrent users'
+        required: false
+        default: '100'
+      duration:
+        description: 'Test duration (e.g., 5m, 1h)'
+        required: false
+        default: '5m'
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r tests/requirements.txt
+      
+      - name: Run load tests
+        run: |
+          cd tests/performance
+          locust -f load_tests.py \
+            --host=${{ secrets.STAGING_URL || 'http://localhost:8000' }} \
+            --headless \
+            -u ${{ github.event.inputs.users || '100' }} \
+            -r 10 \
+            -t ${{ github.event.inputs.duration || '5m' }} \
+            --html=load-test-report.html \
+            --csv=load-test-results
+      
+      - name: Run stress tests
+        if: github.event_name == 'schedule'
+        run: |
+          cd tests/performance
+          locust -f stress_tests.py \
+            --host=${{ secrets.STAGING_URL || 'http://localhost:8000' }} \
+            --headless \
+            -u 500 \
+            -r 50 \
+            -t 10m \
+            --html=stress-test-report.html
+      
+      - name: Run API benchmarks
+        run: |
+          cd tests/performance
+          python api_benchmarks.py
+      
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        with:
+          name: performance-results
+          path: |
+            tests/performance/load-test-report.html
+            tests/performance/load-test-results*.csv
+            tests/performance/stress-test-report.html
+            tests/performance/benchmark_results.json
+      
+      - name: Check performance thresholds
+        run: |
+          cd tests/performance
+          python check_thresholds.py benchmark_results.json
+      
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('tests/performance/benchmark_results.json', 'utf8'));
+            
+            let comment = '## Performance Test Results\n\n';
+            comment += '| Endpoint | Mean (ms) | P95 (ms) | P99 (ms) |\n';
+            comment += '|----------|-----------|----------|----------|\n';
+            
+            results.forEach(result => {
+              comment += `| ${result.endpoint} | ${(result.mean_time * 1000).toFixed(2)} | ${(result.p95 * 1000).toFixed(2)} | ${(result.p99 * 1000).toFixed(2)} |\n`;
+            });
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

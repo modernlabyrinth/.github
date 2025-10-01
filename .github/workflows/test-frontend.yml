@@ -1,0 +1,65 @@
+name: Frontend Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18, 20, 21]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          cd tests
+          npm ci
+      
+      - name: Run linting
+        run: |
+          cd tests
+          npm run lint
+      
+      - name: Run unit tests
+        run: |
+          cd tests
+          npm run test:frontend -- --coverage --maxWorkers=2
+      
+      - name: Run accessibility tests
+        run: |
+          cd tests
+          npm run test:accessibility || true
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./tests/frontend/coverage/coverage-final.json
+          flags: frontend
+          name: frontend-coverage
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-test-results-${{ matrix.node-version }}
+          path: |
+            tests/frontend/coverage/
+            tests/frontend/test-results/
+      
+      - name: Check coverage threshold
+        run: |
+          cd tests
+          npm run test:frontend:coverage -- --coverageThreshold='{"global":{"branches":75,"functions":75,"lines":75,"statements":75}}'
