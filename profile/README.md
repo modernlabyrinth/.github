@@ -1,106 +1,69 @@
-  <div align="center">
+<div align="center">
 
-  [![Website](https://img.shields.io/badge/Website-modernlabyrinth.com-blue?style=flat-square)](https://www.modernlabyrinth.com)
-  [![Email](https://img.shields.io/badge/Contact-info@modernlabyrinth.com-red?style=flat-square)](mailto:info@modernlabyrinth.com)
-  [![Location](https://img.shields.io/badge/Location-Orange_County,_CA-green?style=flat-square)](https://maps.google.com/?q=Orange+County+California
-  )
+[![Website](https://img.shields.io/badge/Website-modernlabyrinth.com-blue?style=flat-square)](https://www.modernlabyrinth.com)
+[![Email](https://img.shields.io/badge/Contact-hello@modernlabyrinth.com-red?style=flat-square)](mailto:hello@modernlabyrinth.com)
+[![Location](https://img.shields.io/badge/Location-Orange_County,_CA-green?style=flat-square)](https://maps.google.com/?q=Orange+County+California)
 
-  </div>
+</div>
 
-  ---
+---
 
-  ## About Modern Labyrinth
+## About Modern Labyrinth
 
-  Modern Labyrinth is a full-service digital agency based in Orange County, California. We specialize in creating innovative digital solutions that
-  help businesses navigate the complex landscape of modern technology.
+Modern Labyrinth is a design, development, and marketing agency based in Orange County, California. We build high-performance websites, manage paid media campaigns, and create AI-powered operational tools for businesses that need results — not just deliverables.
 
-  ### Our Mission
+### Our Focus
 
-  To empower businesses with cutting-edge digital solutions that drive growth, enhance user experience, and deliver measurable results.
+We work with established businesses that need a technical partner who can own the full stack: brand-aligned websites that convert, search visibility that compounds, and infrastructure that runs itself.
 
-  ---
+---
 
-  ## Our Services
+## Services
 
-  ### Design
-  - UI/UX Design
-  - Brand Identity Development
-  - Web Design
-  - Mobile Application Design
-  - Information Architecture
+### Design & Development
+- Custom website design and development (Next.js, Astro, React)
+- E-commerce and SaaS application development
+- Headless WordPress and CMS architecture
+- Performance optimization and Core Web Vitals
+- UI/UX design and brand identity
 
-  ### Development
-  - Full-Stack Web Development
-  - SaaS Application Development
-  - E-commerce Solutions
-  - API Development & Integration
-  - Database Architecture
+### Search & Paid Media
+- SEO strategy and execution
+- Google Ads management (PPC)
+- Content strategy and production
+- Analytics, attribution, and conversion tracking
+- Technical SEO audits
 
-  ### Marketing
-  - Digital Marketing Strategy
-  - Search Engine Optimization
-  - Content Strategy
-  - Analytics & Performance Metrics
-  - Conversion Optimization
+### AI & Automation
+- AI agent development for business operations
+- n8n workflow automation
+- Automated monitoring and alerting
+- Client health dashboards
 
-  ---
+---
 
-  ## Technology Stack
+## Technology
 
-  ### Frontend Technologies
-  - React / Next.js
-  - TypeScript / JavaScript
-  - Tailwind CSS / SCSS
-  - Progressive Web Applications
+**Frontend:** Next.js · Astro · React · TypeScript · Tailwind CSS
+**Backend:** Node.js · Supabase · PostgreSQL · Vercel · Hetzner
+**Automation:** n8n · Mattermost · Uptime Kuma · Docker
+**Analytics:** GA4 · Google Ads · Ahrefs · Google Search Console
 
-  ### Backend Technologies
-  - Node.js / Express.js
-  - Strapi CMS
-  - PostgreSQL / MongoDB
-  - RESTful & GraphQL APIs
+---
 
-  ### Infrastructure & DevOps
-  - Docker Containerization
-  - CI/CD Pipelines
-  - GitHub Actions
-  - Railway / Vercel Deployment
-  - Cloud Architecture
+## Contact
 
-  ---
+**Modern Labyrinth**
+Orange County, California
 
-  ## Open Source Contributions
+**Email:** hello@modernlabyrinth.com
+**Web:** [modernlabyrinth.com](https://www.modernlabyrinth.com)
+**Phone:** 888-367-5580
 
-  We maintain and contribute to several open-source projects:
+---
 
-  - **[open-saas](https://github.com/modernlabyrinth/open-saas)** - Production-ready SaaS application starter template
-  - **[strapi-template-blog-backend](https://github.com/modernlabyrinth/strapi-template-blog-backend)** - Headless CMS backend template
+<div align="center">
 
-  ---
+© 2026 Modern Labyrinth. All rights reserved.
 
-  ## Our Process
-
-  1. **Discovery & Analysis** - Comprehensive understanding of your business requirements and objectives
-  2. **Strategic Planning** - Development of tailored solutions aligned with your goals
-  3. **Implementation** - Precise execution with attention to quality and performance
-  4. **Testing & Optimization** - Rigorous quality assurance and performance optimization
-  5. **Deployment & Support** - Seamless launch and ongoing maintenance
-
-  ---
-
-  ## Contact Information
-
-  **Modern Labyrinth**
-  Orange County, California
-
-  **Email:** info@modernlabyrinth.com
-  **Website:** [modernlabyrinth.com](https://www.modernlabyrinth.com)
-
-  For project inquiries or consultations, please reach out via email or visit our website.
-
-  ---
-
-  <div align="center">
-
-  © 2024 Modern Labyrinth. All rights reserved.
-
-  </div>
+</div>
